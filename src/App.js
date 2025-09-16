@@ -60,7 +60,10 @@ function App() {
             <Route path="/admin/dashboard" element={<ProtectedRoute allowedRoles={['ADMIN']}><AdminDashboard /></ProtectedRoute>} />
             <Route path="/superadmin/dashboard" element={<ProtectedRoute allowedRoles={['SUPER_ADMIN']}><SuperAdminDashboard /></ProtectedRoute>} />
             <Route path="/super-admin/dashboard" element={<ProtectedRoute allowedRoles={['SUPER_ADMIN']}><SuperAdminDashboard /></ProtectedRoute>} />
-            <Route path="/employee/dashboard" element={<ProtectedRoute allowedRoles={['EMPLOYEE']}><FPOEmployeeDashboard /></ProtectedRoute>} />
+            {/* DATE Employee dashboard */}
+            <Route path="/employee/dashboard" element={<ProtectedRoute allowedRoles={['EMPLOYEE']}><EmployeeDashboard /></ProtectedRoute>} />
+            {/* FPO Employee dashboard */}
+            <Route path="/fpo-employee/dashboard" element={<ProtectedRoute allowedRoles={['EMPLOYEE']}><FPOEmployeeDashboard /></ProtectedRoute>} />
             <Route path="/dashboard" element={<ProtectedRoute allowedRoles={['FARMER']}><FarmerDashboard /></ProtectedRoute>} />
             <Route path="/fpo/dashboard/:fpoId" element={<ProtectedRoute allowedRoles={['FPO']}><FPODashboard /></ProtectedRoute>} />
             <Route path="/fpo/dashboard" element={<ProtectedRoute allowedRoles={['FPO']}><FPODashboard /></ProtectedRoute>} />

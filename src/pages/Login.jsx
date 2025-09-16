@@ -95,12 +95,13 @@ const Login = () => {
         console.log('FPO Login Token:', res.token);
         
         const normalizedType = (res.userType || res.userRole || res.type || '').toString().toUpperCase();
-        const isEmployeeUser = normalizedType.includes('EMPLOYEE');
+        // Only treat as FPO employee when backend explicitly marks FPO_EMPLOYEE or context requires it
+        const isFpoEmployeeUser = ['FPO_EMPLOYEE', 'FPO-EMPLOYEE', 'FPOEMPLOYEE'].includes(normalizedType);
         const user = {
           userName: res.email,
           name: res.email,
           email: res.email,
-          role: isEmployeeUser ? 'EMPLOYEE' : 'FPO',
+          role: isFpoEmployeeUser ? 'EMPLOYEE' : 'FPO',
           forcePasswordChange: false,
           status: 'APPROVED',
           fpoId: res.fpoId || res.fpoID || res?.fpo?.id,
@@ -122,8 +123,8 @@ const Login = () => {
         const isFpoAdmin = isAdminByString || res.isAdmin === true || userName?.toLowerCase?.().includes('admin');
 
         const resolvedFpoId = user.fpoId;
-        if (isEmployeeUser) {
-          navigate('/employee/dashboard');
+        if (isFpoEmployeeUser) {
+          navigate('/fpo-employee/dashboard');
         } else if (isFpoAdmin && resolvedFpoId) {
           navigate(`/fpo-admin/dashboard/${resolvedFpoId}`);
         } else if (resolvedFpoId) {

@@ -45,6 +45,7 @@ const EmployeeDashboard = () => {
   const [idCardImageUrl, setIdCardImageUrl] = useState(null);
   const [showIdCardModal, setShowIdCardModal] = useState(false);
   const [loadingIdCard, setLoadingIdCard] = useState(false);
+  const [isBodyLocked, setIsBodyLocked] = useState(false);
   
   // FPO States
   const [fpos, setFpos] = useState([]);
@@ -66,6 +67,25 @@ const EmployeeDashboard = () => {
   const [selectedFPOForInputShop, setSelectedFPOForInputShop] = useState(null);
   const [showProductCategories, setShowProductCategories] = useState(false);
   // Resolve real employee id (entity id) for MyIdCard holder
+  useEffect(() => {
+    if (!showIdCardModal) return;
+    const handleKey = (e) => {
+      if (e.key === 'Escape') {
+        try { document.body.style.overflow = ''; } catch (_) {}
+        setIsBodyLocked(false);
+        setShowIdCardModal(false);
+      }
+    };
+    const prevOverflow = document.body.style.overflow;
+    try { document.body.style.overflow = 'hidden'; setIsBodyLocked(true); } catch (_) {}
+    document.addEventListener('keydown', handleKey);
+    return () => {
+      document.removeEventListener('keydown', handleKey);
+      try { document.body.style.overflow = prevOverflow; } catch (_) {}
+      setIsBodyLocked(false);
+    };
+  }, [showIdCardModal]);
+
   useEffect(() => {
     const loadEmployeeProfileId = async () => {
       try {
@@ -460,6 +480,9 @@ const EmployeeDashboard = () => {
       setLoadingIdCard(true);
       setIdCard(null);
       setIdCardImageUrl(null);
+      if (!isBodyLocked) {
+        try { document.body.style.overflow = 'hidden'; setIsBodyLocked(true); } catch (_) {}
+      }
       const res = await api.get(`/employees/dashboard/farmers/${farmerId}/id-card`, {
         withCredentials: true,
         headers: { 'Accept': 'application/json' }
@@ -2964,6 +2987,53 @@ const EmployeeDashboard = () => {
           onClose={() => { setShowFpoUsers(false); setSelectedFPOForUsers(null); }}
           fpoId={selectedFPOForUsers.id}
         />
+      )}
+
+      {/* Farmer ID Card Modal */}
+      {showIdCardModal && (
+        <div
+          style={{
+            position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+            background: 'rgba(15,23,42,0.55)', backdropFilter: 'blur(2px)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+            zIndex: 10000
+          }}
+          onClick={() => { setShowIdCardModal(false); try { document.body.style.overflow = ''; setIsBodyLocked(false); } catch (_) {} }}
+        >
+          <div
+            style={{
+              background: 'linear-gradient(180deg, #ffffff 0%, #f8fafc 100%)', borderRadius: 16, width: 'min(900px, 92vw)', maxHeight: '90vh',
+              overflow: 'auto', boxShadow: '0 24px 60px rgba(2,6,23,0.35)', padding: 24, border: '1px solid #e2e8f0'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+              <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: 10 }}>
+                <span style={{ display: 'inline-flex', width: 28, height: 28, alignItems: 'center', justifyContent: 'center', background: '#e0f2fe', color: '#0284c7', borderRadius: 8 }}>🪪</span>
+                Farmer ID Card {idCard?.holderName ? `- ${idCard.holderName}` : ''}
+              </h3>
+              <button onClick={() => { setShowIdCardModal(false); try { document.body.style.overflow = ''; setIsBodyLocked(false); } catch (_) {} }} style={{ border: 'none', background: 'transparent', fontSize: 24, cursor: 'pointer', lineHeight: 1 }}>×</button>
+            </div>
+            {loadingIdCard ? (
+              <div style={{ padding: 24, display: 'flex', gap: 12, alignItems: 'center' }}>
+                <span className="spinner" style={{ width: 18, height: 18, border: '3px solid #cbd5e1', borderTopColor: '#2563eb', borderRadius: '50%', display: 'inline-block', animation: 'spin 0.9s linear infinite' }}></span>
+                Loading ID Card…
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                {idCardImageUrl || idCard?.pngUrl ? (
+                  <img src={idCardImageUrl || idCard?.pngUrl} alt="Farmer ID Card" style={{ width: '100%', height: 'auto', borderRadius: 12, border: '1px solid #e2e8f0', boxShadow: '0 6px 20px rgba(2,6,23,0.08)' }} />
+                ) : (
+                  <div style={{ padding: 24, background: '#f8fafc', border: '1px dashed #cbd5e1', borderRadius: 12, color: '#64748b' }}>No image available.</div>
+                )}
+                <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end' }}>
+                  <button onClick={() => { setShowIdCardModal(false); try { document.body.style.overflow = ''; setIsBodyLocked(false); } catch (_) {} }} style={{
+                    background: '#e5e7eb', color: '#111827', padding: '10px 14px', borderRadius: 10, border: 'none', fontWeight: 700, cursor: 'pointer'
+                  }}>Cancel</button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
       )}
     </div>
   );
