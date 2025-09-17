@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Registration Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .test-section {
+            margin-bottom: 30px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .test-title {
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        .test-step {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-left: 4px solid #007bff;
+        }
+        .expected-result {
+            background-color: #d4edda;
+            border-left-color: #28a745;
+        }
+        .test-data {
+            background-color: #fff3cd;
+            border-left-color: #ffc107;
+        }
+        .code-block {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            margin: 10px 0;
+        }
+        .success { color: #28a745; font-weight: bold; }
+        .warning { color: #ffc107; font-weight: bold; }
+        .error { color: #dc3545; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1 class="test-title">Admin Registration Functionality Test</h1>
+        
+        <div class="test-section">
+            <h2>Test Overview</h2>
+            <p>This document outlines the testing steps for the new Admin Registration functionality that has been added to the DATE system.</p>
+        </div>
+
+        <div class="test-section">
+            <h2>Features Implemented</h2>
+            <ul>
+                <li>✅ Admin registration form accessible from login page</li>
+                <li>✅ Email OTP verification for admin registration</li>
+                <li>✅ Admin registrations require Super Admin approval</li>
+                <li>✅ Integration with existing approval system</li>
+                <li>✅ Proper validation and error handling</li>
+            </ul>
+        </div>
+
+        <div class="test-section">
+            <h2>Test Steps</h2>
+            
+            <div class="test-step">
+                <h3>Step 1: Access Admin Registration</h3>
+                <p>1. Navigate to the login page</p>
+                <p>2. Click on the "Official" tab</p>
+                <p>3. Click "Create New user Account" button</p>
+                <div class="expected-result">
+                    <strong>Expected:</strong> Should navigate to admin registration form
+                </div>
+            </div>
+
+            <div class="test-step">
+                <h3>Step 2: Fill Admin Registration Form</h3>
+                <p>1. Fill in all required fields:</p>
+                <div class="test-data">
+                    <strong>Test Data:</strong>
+                    <div class="code-block">
+Name: John Admin<br>
+Gender: Male<br>
+Date of Birth: 1985-01-15<br>
+Phone Number: 9876543210<br>
+Email: admin.test@example.com<br>
+Password: AdminPass123!<br>
+Confirm Password: AdminPass123!
+                    </div>
+                </div>
+                <div class="expected-result">
+                    <strong>Expected:</strong> Form should accept all data with proper validation
+                </div>
+            </div>
+
+            <div class="test-step">
+                <h3>Step 3: Email Verification</h3>
+                <p>1. Click "Send OTP" button</p>
+                <p>2. Check email for OTP</p>
+                <p>3. Enter OTP and click "Verify"</p>
+                <div class="expected-result">
+                    <strong>Expected:</strong> Email should be verified successfully
+                </div>
+            </div>
+
+            <div class="test-step">
+                <h3>Step 4: Submit Registration</h3>
+                <p>1. Click "Register as Admin" button</p>
+                <p>2. Check for success message</p>
+                <div class="expected-result">
+                    <strong>Expected:</strong> Should show "Admin registration submitted successfully! Please wait for Super Admin approval."
+                </div>
+            </div>
+
+            <div class="test-step">
+                <h3>Step 5: Super Admin Approval</h3>
+                <p>1. Login as Super Admin</p>
+                <p>2. Navigate to Registration Management</p>
+                <p>3. Find the pending admin registration</p>
+                <p>4. Click "Approve" button</p>
+                <div class="expected-result">
+                    <strong>Expected:</strong> Admin should be approved and receive email notification
+                </div>
+            </div>
+
+            <div class="test-step">
+                <h3>Step 6: Admin Login Test</h3>
+                <p>1. Login with approved admin credentials</p>
+                <p>2. Check dashboard access</p>
+                <div class="expected-result">
+                    <strong>Expected:</strong> Should redirect to admin dashboard
+                </div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>API Endpoints Used</h2>
+            <div class="code-block">
+POST /api/auth/send-otp - Send OTP for email verification<br>
+POST /api/auth/verify-otp - Verify OTP<br>
+POST /api/auth/register - Register admin user<br>
+GET /api/super-admin/registration-list - Get pending registrations<br>
+PUT /api/auth/users/{id}/approve - Approve admin registration
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>Validation Rules</h2>
+            <ul>
+                <li>Name: Required, non-empty</li>
+                <li>Gender: Required, must select from dropdown</li>
+                <li>Date of Birth: Required, age must be between 25-65 years</li>
+                <li>Phone Number: Required, exactly 10 digits</li>
+                <li>Email: Required, valid email format</li>
+                <li>Password: Required, min 8 chars, must contain uppercase, lowercase, number, and special character</li>
+                <li>Confirm Password: Must match password</li>
+            </ul>
+        </div>
+
+        <div class="test-section">
+            <h2>Error Scenarios to Test</h2>
+            <ul>
+                <li>Invalid email format</li>
+                <li>Weak password</li>
+                <li>Password mismatch</li>
+                <li>Invalid phone number format</li>
+                <li>Age outside 25-65 range</li>
+                <li>Duplicate email registration</li>
+                <li>OTP verification failure</li>
+            </ul>
+        </div>
+
+        <div class="test-section">
+            <h2>Files Modified/Created</h2>
+            <div class="code-block">
+Created:
+- src/pages/AdminRegistration.jsx
+
+Modified:
+- src/pages/Login.jsx (added admin registration option)
+- src/App.js (added admin registration route)
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>Backend Requirements</h2>
+            <p>The backend already supports admin registration through the existing <code>/api/auth/register</code> endpoint. The Role enum includes ADMIN, and the approval system is generic enough to handle admin registrations.</p>
+        </div>
+
+        <div class="test-section">
+            <h2>Notes</h2>
+            <ul>
+                <li>Admin registrations are set to PENDING_APPROVAL status by default</li>
+                <li>Only Super Admin can approve admin registrations</li>
+                <li>Approval emails are handled by the backend</li>
+                <li>Admin users get redirected to /admin/dashboard after login</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

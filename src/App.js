@@ -17,6 +17,7 @@ import MenuScreen from './pages/MenuScreen';
 
 import FarmerRegistration from './pages/FarmerRegistration';
 import EmployeeRegistration from './pages/EmployeeRegistration';
+import AdminRegistration from './pages/AdminRegistration';
 import RegistrationForm from './pages/RegistrationForm';
 import ForgotPassword from './pages/ForgotPassword';
 import ForgotUserId from './pages/ForgotUserid';
@@ -52,6 +53,7 @@ function App() {
             {/* Registration Routes */}
             <Route path="/farmer/registration" element={<FarmerRegistration />} />
             <Route path="/employee/registration" element={<EmployeeRegistration />} />
+            <Route path="/register-admin" element={<AdminRegistration />} />
             <Route path="/register-employee" element={<RegistrationForm />} />
             <Route path="/register-farmer" element={<RegistrationForm />} />
             <Route path="/register-fpo" element={<RegistrationForm />} />
